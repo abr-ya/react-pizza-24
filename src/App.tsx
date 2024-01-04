@@ -1,10 +1,20 @@
-import Button from "./components/Button/Button";
+import { Route, Routes } from "react-router-dom";
+import { Cart, Demo, Error404, Menu } from "./pages";
 
 const App = () => (
-  <div>
-    <h1>Hello, Vite + React!)</h1>
-    <Button onClick={() => console.log("click!")}>Click me!)</Button>
-  </div>
+  <>
+    <div>
+      <a href="/">Меню</a>
+      <a href="/cart">Корзина</a>
+      <a href="/demo">Демо компонентов</a>
+    </div>
+    <Routes>
+      <Route path="/" element={<Menu />} />
+      <Route path="/cart" element={<Cart />} />
+      <Route path="/demo" element={<Demo />} />
+      <Route path="*" element={<Error404 />} />
+    </Routes>
+  </>
 );
 
 export default App;
