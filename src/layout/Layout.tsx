@@ -15,11 +15,11 @@ const Layout = () => (
       <div className={styles.menu}>
         <NavLink to="/" className={({ isActive }) => cn(styles.link, { [styles.active]: isActive })}>
           <img src="/icons/menu-icon.svg" alt="menu-icon" />
-          Меню
+          Выбрать
         </NavLink>
         <NavLink to="/cart" className={({ isActive }) => cn(styles.link, { [styles.active]: isActive })}>
           <img src="/icons/cart-icon.svg" alt="cart-icon" />
-          Корзина
+          Заказать
         </NavLink>
         <NavLink to="/demo" className={({ isActive }) => cn(styles.link, { [styles.active]: isActive })}>
           Демо компонентов

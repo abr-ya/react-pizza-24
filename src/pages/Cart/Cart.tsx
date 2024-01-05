@@ -1,5 +1,7 @@
+import { Heading } from "../../components";
+
 const Cart = () => {
-  return <div>Cart</div>;
+  return <Heading>Заказать</Heading>;
 };
 
 export default Cart;
