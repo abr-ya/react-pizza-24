@@ -1,4 +1,4 @@
-import { Button, Heading, Search } from "../../components";
+import { Button, Heading, ProductCard, Search } from "../../components";
 
 const Demo = () => (
   <>
@@ -12,6 +12,16 @@ const Demo = () => (
 
     <Heading variant="h2">Search</Heading>
     <Search />
+
+    <Heading variant="h2">ProductCard</Heading>
+    <ProductCard
+      id={0}
+      name={"Пицца вкусная"}
+      description={"Салями, руккола, помидоры, оливки"}
+      image={"/product-demo.png"}
+      price={300}
+      rating={4.5}
+    />
   </>
 );
 
