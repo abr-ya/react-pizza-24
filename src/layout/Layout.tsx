@@ -24,6 +24,9 @@ const Layout = () => (
         <NavLink to="/demo" className={({ isActive }) => cn(styles.link, { [styles.active]: isActive })}>
           Демо компонентов
         </NavLink>
+        <NavLink to="/zustand" className={({ isActive }) => cn(styles.link, { [styles.active]: isActive })}>
+          Демо Zustand
+        </NavLink>
       </div>
       <Button className={styles.exit}>
         <img src="/icons/exit-icon.svg" alt="exit-icon" /> Выход
