@@ -3,6 +3,7 @@ import axios, { AxiosError } from "axios";
 
 import { Heading, ProductList, Search } from "../../components";
 import { IProduct } from "../../interfaces/product.interface";
+import { API_URL } from "../../constants";
 
 import styles from "./Menu.module.css";
 
@@ -19,7 +20,7 @@ const Menu = () => {
     console.log("search", name);
     try {
       setIsLoading(true);
-      const { data } = await axios.get<IProduct[]>("https://purpleschool.ru/pizza-api-demo/products");
+      const { data } = await axios.get<IProduct[]>(`${API_URL}/products`);
       setProducts(data);
       setIsLoading(false);
     } catch (e) {
