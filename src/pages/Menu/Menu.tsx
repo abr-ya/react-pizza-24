@@ -1,7 +1,7 @@
 import { ChangeEvent, useEffect, useState } from "react";
 import axios, { AxiosError } from "axios";
 
-import { Heading, ProductCard, Search } from "../../components";
+import { Heading, ProductList, Search } from "../../components";
 import { IProduct } from "../../interfaces/product.interface";
 
 import styles from "./Menu.module.css";
@@ -38,23 +38,7 @@ const Menu = () => {
     if (error) return <>{error}</>;
     if (isLoading) return <>Загружаем продукты...</>;
 
-    return products.length === 0 ? (
-      <>Не найдено блюд по запросу</>
-    ) : (
-      <>
-        {products.map((p) => (
-          <ProductCard
-            key={p.id}
-            id={p.id}
-            name={p.name}
-            description={p.ingredients.join(", ")}
-            rating={p.rating}
-            price={p.price}
-            image={p.image}
-          />
-        ))}
-      </>
-    );
+    return products.length === 0 ? <>Не найдено блюд по запросу</> : <ProductList products={products} />;
   };
 
   return (
