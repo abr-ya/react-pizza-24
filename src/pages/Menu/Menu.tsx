@@ -8,6 +8,8 @@ import styles from "./Menu.module.css";
 
 const Menu = () => {
   const [products, setProducts] = useState<IProduct[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | undefined>();
 
   useEffect(() => {
     getMenu();
@@ -16,13 +18,14 @@ const Menu = () => {
   const getMenu = async (name?: string) => {
     console.log("search", name);
     try {
+      setIsLoading(true);
       const { data } = await axios.get<IProduct[]>("https://purpleschool.ru/pizza-api-demo/products");
       setProducts(data);
+      setIsLoading(false);
     } catch (e) {
       console.error(e);
-      if (e instanceof AxiosError) {
-        console.log(e.message);
-      }
+      if (e instanceof AxiosError) setError(e.message);
+      setIsLoading(false);
       return;
     }
   };
@@ -31,13 +34,14 @@ const Menu = () => {
     console.log(e.target.value);
   };
 
-  return (
-    <>
-      <div className={styles.head}>
-        <Heading>Выбрать</Heading>
-        <Search placeholder="Введите блюдо или состав" onChange={onSearch} />
-      </div>
-      <div className={styles.content}>
+  const renderContent = () => {
+    if (error) return <>{error}</>;
+    if (isLoading) return <>Загружаем продукты...</>;
+
+    return products.length === 0 ? (
+      <>Не найдено блюд по запросу</>
+    ) : (
+      <>
         {products.map((p) => (
           <ProductCard
             key={p.id}
@@ -49,7 +53,17 @@ const Menu = () => {
             image={p.image}
           />
         ))}
+      </>
+    );
+  };
+
+  return (
+    <>
+      <div className={styles.head}>
+        <Heading>Выбрать</Heading>
+        <Search placeholder="Введите блюдо или состав" onChange={onSearch} />
       </div>
+      <div className={styles.content}>{renderContent()}</div>
     </>
   );
 };
