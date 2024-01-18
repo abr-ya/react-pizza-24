@@ -1,17 +1,27 @@
+import { Suspense, lazy } from "react";
 import { RouterProvider, createBrowserRouter, defer } from "react-router-dom";
 
-import { Cart, Demo, Error404, Menu, Product, Zustand } from "./pages";
+import { Cart, Demo, Error404, Product, Zustand } from "./pages";
 import "./index.css";
 import Layout from "./layout/Layout.tsx";
 import axios from "axios";
 import { API_URL } from "./constants.ts";
+
+const Menu = lazy(() => import("./pages/Menu/Menu.tsx"));
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <Layout />,
     children: [
-      { path: "/", element: <Menu /> },
+      {
+        path: "/",
+        element: (
+          <Suspense fallback={<>Загрузка меню...</>}>
+            <Menu />
+          </Suspense>
+        ),
+      },
       { path: "/cart", element: <Cart /> },
       { path: "/demo", element: <Demo /> },
       { path: "/zustand", element: <Zustand /> },
