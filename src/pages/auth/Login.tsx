@@ -1,34 +1,68 @@
-import { FormEvent } from "react";
 import { Link } from "react-router-dom";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
 
 import { Button, Heading, Input } from "../../components";
 
 import styles from "./Auth.module.css";
+import { API_URL } from "../../constants";
+import axios, { AxiosError } from "axios";
+import { useState } from "react";
 
-export type LoginForm = {
-  email: { value: string };
-  password: { value: string };
-};
+interface IFormData {
+  email: string;
+  password: string;
+}
+
+const schema = yup.object({
+  email: yup.string().email("Email format is not valid").required("Email is required"),
+  password: yup.string().required("Password is required"),
+});
 
 const Login = () => {
-  const submitHandler = (e: FormEvent) => {
-    e.preventDefault();
-    const target = e.target as typeof e.target & LoginForm;
-    const { email, password } = target;
-    console.log("Login", email, password);
+  const [loginErrorMessage, setLoginErrorMessage] = useState("");
+
+  const form = useForm<IFormData>({
+    defaultValues: { email: "", password: "" },
+    resolver: yupResolver(schema),
+  });
+
+  const { register, handleSubmit, formState } = form;
+  const { errors } = formState;
+
+  const loginRequest = async (payload: IFormData) => {
+    try {
+      const { data } = await axios.post(`${API_URL}/auth/login`, payload);
+      console.log(data);
+    } catch (e) {
+      if (e instanceof AxiosError) {
+        console.log(e.code, e.message);
+        setLoginErrorMessage(e.response?.data.message);
+      }
+    }
+  };
+
+  const onSubmit = (data: IFormData) => {
+    setLoginErrorMessage("");
+    console.log(data);
+    loginRequest(data);
   };
 
   return (
-    <div className={styles.login}>
+    <div className={styles.wrapper}>
       <Heading>Вход</Heading>
-      <form className={styles.form} onSubmit={submitHandler}>
+      {loginErrorMessage && <div className={styles.errorBlock}>{loginErrorMessage}</div>}
+      <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
         <div className={styles.field}>
           <label htmlFor="email">Ваш email</label>
-          <Input id="email" name="email" placeholder="Email" />
+          <Input id="email" placeholder="Email" {...register("email")} />
+          <p className={styles.error}>{errors.email?.message}</p>
         </div>
         <div className={styles.field}>
           <label htmlFor="password">Ваш пароль</label>
-          <Input id="password" name="password" type="password" placeholder="Пароль" />
+          <Input id="password" type="password" placeholder="Пароль" {...register("password")} />
+          <p className={styles.error}>{errors.password?.message}</p>
         </div>
         <Button variant="big">Вход</Button>
       </form>
