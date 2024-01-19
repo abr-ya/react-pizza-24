@@ -1,10 +1,10 @@
 import { Suspense, lazy } from "react";
+import axios from "axios";
 import { RouterProvider, createBrowserRouter, defer } from "react-router-dom";
 
 import { Cart, Demo, Error404, Login, Product, Register, Zustand } from "./pages";
 import "./index.css";
 import Layout from "./layout/Layout.tsx";
-import axios from "axios";
 import { API_URL } from "./constants.ts";
 import { AuthLayout } from "./layout/AuthLayout.tsx";
 
