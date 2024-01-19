@@ -7,13 +7,18 @@ import "./index.css";
 import Layout from "./layout/Layout.tsx";
 import { API_URL } from "./constants.ts";
 import { AuthLayout } from "./layout/AuthLayout.tsx";
+import { RequireAuth } from "./layout/RequireAuth.tsx";
 
 const Menu = lazy(() => import("./pages/Menu/Menu.tsx"));
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <Layout />,
+    element: (
+      <RequireAuth>
+        <Layout />
+      </RequireAuth>
+    ),
     children: [
       {
         path: "/",

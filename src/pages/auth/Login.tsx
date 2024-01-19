@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
@@ -8,7 +8,8 @@ import { Button, Heading, Input } from "../../components";
 import styles from "./Auth.module.css";
 import { API_URL } from "../../constants";
 import axios, { AxiosError } from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { ILoginResponse } from "../../interfaces/auth.interface";
 
 interface IFormData {
   email: string;
@@ -21,7 +22,14 @@ const schema = yup.object({
 });
 
 const Login = () => {
+  const navigate = useNavigate();
+
   const [loginErrorMessage, setLoginErrorMessage] = useState("");
+  const jwt = localStorage.getItem("jwt");
+
+  useEffect(() => {
+    if (jwt) navigate("/");
+  }, [navigate, jwt]);
 
   const form = useForm<IFormData>({
     defaultValues: { email: "", password: "" },
@@ -33,8 +41,9 @@ const Login = () => {
 
   const loginRequest = async (payload: IFormData) => {
     try {
-      const { data } = await axios.post(`${API_URL}/auth/login`, payload);
+      const { data } = await axios.post<ILoginResponse>(`${API_URL}/auth/login`, payload);
       console.log(data);
+      localStorage.setItem("jwt", data.access_token);
     } catch (e) {
       if (e instanceof AxiosError) {
         console.log(e.code, e.message);
