@@ -1,11 +1,12 @@
 import { Suspense, lazy } from "react";
 import { RouterProvider, createBrowserRouter, defer } from "react-router-dom";
 
-import { Cart, Demo, Error404, Product, Zustand } from "./pages";
+import { Cart, Demo, Error404, Login, Product, Register, Zustand } from "./pages";
 import "./index.css";
 import Layout from "./layout/Layout.tsx";
 import axios from "axios";
 import { API_URL } from "./constants.ts";
+import { AuthLayout } from "./layout/AuthLayout.tsx";
 
 const Menu = lazy(() => import("./pages/Menu/Menu.tsx"));
 
@@ -41,6 +42,20 @@ const router = createBrowserRouter([
             }),
           });
         },
+      },
+    ],
+  },
+  {
+    path: "/auth",
+    element: <AuthLayout />,
+    children: [
+      {
+        path: "login",
+        element: <Login />,
+      },
+      {
+        path: "register",
+        element: <Register />,
       },
     ],
   },
