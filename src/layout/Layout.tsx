@@ -4,13 +4,16 @@ import cn from "classnames";
 import { Button } from "../components";
 
 import styles from "./Layout.module.css";
+import { useAppDispatch } from "../app/store";
+import { userLogout } from "../app/user.slice";
 
 const Layout = () => {
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
   const logoutHandler = () => {
     console.log("logout");
-    localStorage.removeItem("jwt");
+    dispatch(userLogout());
     navigate("/auth/login");
   };
 
