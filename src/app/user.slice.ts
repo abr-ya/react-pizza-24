@@ -5,17 +5,25 @@ import { loadState } from "./storage";
 import { ILoginResponse } from "../interfaces/auth.interface";
 import axios, { AxiosError } from "axios";
 import { API_URL } from "../constants";
+import { RootState } from "./store";
 
 export const JWT_PERSISTENT_STATE = "userData";
 export interface IUserState {
   jwt: string | null;
   loginErrorMessage?: string;
   registerErrorMessage?: string;
-  profile?: IProfile;
+  profile: IProfile;
 }
+
+const initialUser = {
+  id: 0,
+  email: "",
+  name: "",
+};
 
 const initialState: IUserState = {
   jwt: loadState(JWT_PERSISTENT_STATE)?.jwt ?? null,
+  profile: initialUser,
 };
 
 export const login = createAsyncThunk("user/login", async (payload: { email: string; password: string }) => {
@@ -29,12 +37,30 @@ export const login = createAsyncThunk("user/login", async (payload: { email: str
   }
 });
 
+// todo: register
+
+/* типизация:
+- что возвращает,
+- параметры,
+- стейт */
+export const getProfile = createAsyncThunk<IProfile, void, { state: RootState }>(
+  "user/getProfile",
+  async (_, thunkApi) => {
+    const jwt = thunkApi.getState().user.jwt;
+    const { data } = await axios.get<IProfile>(`${API_URL}/user/profile`, {
+      headers: { Authorization: `Bearer ${jwt}` }, // todo: ==> interceptor?
+    });
+    return data;
+  },
+);
+
 export const userSlice = createSlice({
   name: "user",
   initialState,
   reducers: {
     userLogout: (state) => {
       state.jwt = null;
+      state.profile = initialUser;
     },
   },
   extraReducers: (builder) => {
@@ -46,6 +72,9 @@ export const userSlice = createSlice({
       })
       .addCase(login.rejected, (state, action) => {
         state.loginErrorMessage = action.error.message;
+      })
+      .addCase(getProfile.fulfilled, (state, action) => {
+        state.profile = action.payload;
       });
   },
 });

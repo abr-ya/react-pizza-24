@@ -5,7 +5,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 
 import { useAppDispatch, useAppSelector } from "../../app/store";
-import { login } from "../../app/user.slice";
+import { getProfile, login } from "../../app/user.slice";
 import { Button, Heading, Input } from "../../components";
 
 import styles from "./Auth.module.css";
@@ -27,7 +27,10 @@ const Login = () => {
   const { jwt, loginErrorMessage } = useAppSelector((state) => state.user);
 
   useEffect(() => {
-    if (jwt) navigate("/");
+    if (jwt) {
+      dispatch(getProfile());
+      navigate("/");
+    }
   }, [navigate, jwt]);
 
   const form = useForm<IFormData>({

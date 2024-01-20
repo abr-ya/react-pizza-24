@@ -4,12 +4,14 @@ import cn from "classnames";
 import { Button } from "../components";
 
 import styles from "./Layout.module.css";
-import { useAppDispatch } from "../app/store";
+import { useAppDispatch, useAppSelector } from "../app/store";
 import { userLogout } from "../app/user.slice";
 
 const Layout = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+
+  const { email, name } = useAppSelector((state) => state.user.profile);
 
   const logoutHandler = () => {
     console.log("logout");
@@ -22,8 +24,8 @@ const Layout = () => {
       <div className={styles.sidebar}>
         <div className={styles.user}>
           <img className={styles.avatar} src="/avatar.png" alt="menu-icon" />
-          <div className={styles.name}>Юзер Юзерович</div>
-          <div className={styles.email}>mail@demomail.com</div>
+          <div className={styles.name}>{name}</div>
+          <div className={styles.email}>{email}</div>
         </div>
         <div className={styles.menu}>
           <NavLink to="/" className={({ isActive }) => cn(styles.link, { [styles.active]: isActive })}>
