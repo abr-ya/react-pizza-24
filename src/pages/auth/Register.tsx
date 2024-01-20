@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
@@ -6,6 +6,9 @@ import * as yup from "yup";
 import { Button, Heading, Input } from "../../components";
 
 import styles from "./Auth.module.css";
+import { useAppDispatch, useAppSelector } from "../../app/store";
+import { useEffect } from "react";
+import { getProfile, registerUser } from "../../app/user.slice";
 
 interface IFormData {
   email: string;
@@ -20,6 +23,11 @@ const schema = yup.object({
 });
 
 const Register = () => {
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+
+  const { jwt, registerErrorMessage } = useAppSelector((state) => state.user);
+
   const form = useForm<IFormData>({
     defaultValues: {
       email: "",
@@ -32,13 +40,22 @@ const Register = () => {
   const { register, handleSubmit, formState } = form;
   const { errors } = formState;
 
-  const onSubmit = (data: IFormData) => {
-    console.log(data);
+  const onSubmit = (params: IFormData) => {
+    console.log(params);
+    dispatch(registerUser(params));
   };
+
+  useEffect(() => {
+    if (jwt) {
+      dispatch(getProfile());
+      navigate("/");
+    }
+  }, [navigate, jwt]);
 
   return (
     <div className={styles.wrapper}>
       <Heading>Регистрация</Heading>
+      {registerErrorMessage && <div className={styles.errorBlock}>{registerErrorMessage}</div>}
       <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
         <div className={styles.field}>
           <label htmlFor="email">Ваш email</label>
