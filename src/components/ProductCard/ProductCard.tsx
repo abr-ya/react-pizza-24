@@ -5,11 +5,15 @@ import styles from "./ProductCard.module.css";
 import { ProductCardProps } from "./ProductCard.props";
 import CartIcon from "./cart-button-icon.svg";
 import StarIcon from "./star-icon.svg";
+import { useAppDispatch } from "../../app/store";
+import { increaseInCart } from "../../app/cart.slice";
 
 const ProductCard = ({ description, id, image, name, price, rating }: ProductCardProps) => {
+  const dispatch = useAppDispatch();
+
   const add = (e: MouseEvent) => {
     e.preventDefault();
-    console.log(e);
+    dispatch(increaseInCart(id));
   };
 
   return (
