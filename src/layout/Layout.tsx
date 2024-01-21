@@ -12,6 +12,7 @@ const Layout = () => {
   const navigate = useNavigate();
 
   const { email, name } = useAppSelector((state) => state.user.profile);
+  const { items } = useAppSelector((state) => state.cart);
 
   const logoutHandler = () => {
     console.log("logout");
@@ -35,6 +36,7 @@ const Layout = () => {
           <NavLink to="/cart" className={({ isActive }) => cn(styles.link, { [styles.active]: isActive })}>
             <img src="/icons/cart-icon.svg" alt="cart-icon" />
             Заказать
+            <span className={styles.cartCount}>{items.reduce((acc, item) => (acc += item.count), 0)}</span>
           </NavLink>
           <NavLink to="/demo" className={({ isActive }) => cn(styles.link, { [styles.active]: isActive })}>
             Демо компонентов
